@@ -2,7 +2,7 @@
     session_start();
     include("config.php");
 
-    $orderId = $_SESSION['order_id'];
+    $orderId = $_POST['OrderId'];
     $paymentMethod = !empty($_POST['paymentMethod']) ? $_POST['paymentMethod'] : '';
     $status = !empty($_POST['Status']) ? $_POST['Status'] : '';
     $paid_amount = !empty($_POST['PaidAmountCents']) ? $_POST['PaidAmountCents'] : '';

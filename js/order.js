@@ -11,7 +11,6 @@ $("body").on("click", ".prod", function prod(){
     var order_subtotal = $('#order-subtotal').text();
     order_subtotal = parseInt(order_subtotal.substring(order_subtotal.indexOf(' ') + 1));
     var quan = 1;
-
     if (prod == 'product-1'){
         num = 1;
         name = 'P1';
@@ -45,7 +44,7 @@ $("body").on("click", ".prod", function prod(){
         '<td id="item-cost-'+ num +'">' + price + '</td>' + 
         '</tr>' + 
         '';
-    var row2 = name;
+    // var row2 = name;
     // $('#new_row').append(row2);
     var row_count = $('#order-table tr').length;
     if ($('#user-product-'+ num +'').length == 0){
@@ -64,7 +63,8 @@ $("body").on("click", ".prod", function prod(){
                 data : {
                     'CostPerItem': price,
                     'ProductName': name,
-                    'Quantity': quan 
+                    'Quantity': quan,
+                    'OrderId':  order_id
                 },
                 success: function (response) {
                     message = response;
@@ -86,7 +86,8 @@ $("body").on("click", ".prod", function prod(){
                 data : {
                     'CostPerItem': price,
                     'ProductName': name,
-                    'Quantity': quan 
+                    'Quantity': quan,
+                    'OrderId':  order_id 
                 },
                 success: function (response) {
                     message = response;
@@ -150,7 +151,8 @@ $("body").on("click", ".add", function add(){
             data : {
                 'CostPerItem': price,
                 'ProductName': name,
-                'Quantity': quan 
+                'Quantity': quan,
+                'OrderId':  order_id 
             },
             success: function (response) {
                 message = response;
@@ -213,7 +215,8 @@ $("body").on('click', ".remove", function remove(){
             data : {
                 'CostPerItem': price,
                 'ProductName': name,
-                'Quantity': quan 
+                'Quantity': quan,
+                'OrderId':  order_id 
             },
             success: function (response) {
                 message = response;
@@ -233,7 +236,8 @@ $("body").on('click', ".remove", function remove(){
             data : {
                 'CostPerItem': price,
                 'ProductName': name,
-                'Quantity': 0 
+                'Quantity': 0,
+                'OrderId':  order_id 
             },
             success: function (response) {
                 message = response;
@@ -266,7 +270,8 @@ $('#order-check-out').on('click',function(e){
             url: "checkout.php",
             data : {
                 'Status': 'Pending',
-                'PaidAmountCents': order_total
+                'PaidAmountCents': order_total,
+                'OrderId':  order_id
             },
             success: function (response) {
                 message = response;
@@ -279,7 +284,6 @@ $('#order-check-out').on('click',function(e){
 });
 
 $('#checkout-total-paid').keyup(function(){
-    // console.log($('#checkout-order-total').text());
     var order_total = $('#checkout-order-total').text();
     order_total = parseFloat(order_total.substring(order_total.indexOf(' ') + 1));
     // console.log('total');
@@ -290,11 +294,14 @@ $('#checkout-total-paid').keyup(function(){
     total_paid = total_paid.toFixed(2);
 
     $('#checkout-order-total-input').val(order_total_return);
+    $('#trans-submit').prop('disabled', true);
     if( total_paid >= order_total){
-        $('#trans-submit').prop('disabled', false);
         var keyin_paid = total_paid - order_total;
+        var num = Number.isNaN(keyin_paid);
+        if(keyin_paid > 0 && !num){
+            $('#trans-submit').prop('disabled', false);
+        }
         $('#checkout-change').text('RM '+ keyin_paid.toFixed(2));
-        // $('#checkout-change-input').val(keyin_paid.toFixed(2));
     }
 
 });
@@ -309,7 +316,8 @@ function transPaid(){
         data : {
             'Status': 'Completed',
             'TotalAmount': order_total,
-            'IsWalkIn': true
+            'IsWalkIn': true,
+            'OrderId':  order_id
         },
         success: function(response) {
             message = response;
@@ -330,7 +338,8 @@ $('#trans-submit').on('click', function(e){
             data : {
                 'Status': status,
                 'PaidAmountCents': paidAmountCents,
-                'paymentMethod': paymentMethod
+                'paymentMethod': paymentMethod,
+                'OrderId':  order_id
             },
             success: function (response) {
                 message = response;
@@ -352,7 +361,9 @@ $('#order-cancel').on('click', function(e){
         data : {
             'Status': 'Cancelled',
             'TotalAmount': order_total,
-            'IsWalkIn': true
+            'IsWalkIn': true,
+            'OrderId':  order_id,
+            'TransRefund': 'Refunded'
         },
         success: function(response) {
             message = response;

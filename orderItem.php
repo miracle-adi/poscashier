@@ -2,7 +2,7 @@
     session_start();
     include("config.php");
 
-    $orderId = $_SESSION['order_id'];
+    $orderId = $_POST['OrderId'];
 
     $cost = !empty($_POST['CostPerItem']) ? $_POST['CostPerItem'] : '';
     $productName = !empty($_POST['ProductName']) ? $_POST['ProductName'] : '';
@@ -18,6 +18,8 @@
             $sql_update = "UPDATE order_items SET quantity = $prodQuantity WHERE id = '$id'";
             if ($result = mysqli_query($conn, $sql_update)){
                 echo "Item Updated Successfully"." ".$id;
+            }else{
+                echo mysqli_error($conn);
             }
         } else {
             $sql_insert = "INSERT INTO order_items (order_id, cost_per_item, product_name, quantity) VALUES (

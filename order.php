@@ -13,7 +13,12 @@
         $orderTax = $_POST['orderTax'];
         $orderServiceCharge = $_POST['orderServiceCharge'];
         $totalAmountCents = $_POST['totalAmountCents'];
-        $isWalkIn = $_POST['isWalkIn'];
+        // $isWalkIn = $_POST['isWalkIn'];
+        if($_POST['isWalkIn'] == true){
+            $isWalkIn = 1;
+        } else {
+            $isWalkIn = 0;
+        }
         $orderStatus = $_POST['orderStatus'];
         $datetime = date("YmdHis");
 
@@ -144,7 +149,7 @@
                         <div class="col-md-4">
                             <button type="button" class="btn btn-primary btn-co" id="order-check-out">Check Out</button> 
                         </div>
-                        <div class="col-md-2"></div>
+                        <div class="col-md-2"><input type="hidden" id="order-id" value="<?php echo $_SESSION['order_id'];?>"></div>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -250,5 +255,9 @@
 </html>
 
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
-
+<script>
+    var order_id = $('#order-id').val();
+    console.log('order');
+    console.log(order_id);
+</script>
 <script type="text/javascript" src="js/order.js"></script>
